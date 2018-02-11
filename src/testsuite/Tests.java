@@ -3,6 +3,7 @@ package testsuite;
 import static junit.framework.TestCase.assertTrue;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -35,7 +36,7 @@ public class Tests {
   @Test
   public void qsortTest2() {
 
-    Integer[] a = integerRandomGenerator(1000000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    Integer[] a = integerRandomGenerator(10000000, Integer.MIN_VALUE, Integer.MAX_VALUE);
     Integer[] b = a.clone();
     Arrays.sort(b);
 
@@ -45,5 +46,5 @@ public class Tests {
     System.out.println("qsortTest2 executed in: " + (System.currentTimeMillis() - time));
 
     assertTrue(Arrays.equals(a, b));
-  }
+   }
 }

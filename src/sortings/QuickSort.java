@@ -1,53 +1,76 @@
 package sortings;
 
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
 public class QuickSort {
 
   public static void qsort(Comparable[] v) {
     qsortHelper(v, 0, v.length - 1);
   }
+
   public static void concurentQsort(Comparable[] v) {
-    Thread a = new Thread(() -> qsortHelper(v, 0, v.length / 2));
-    a.start();
 
-    Thread b = new Thread(() -> qsortHelper(v, v.length / 2 + 1, v.length - 1));
-    b.start();
+    Thread[] sortingThreads = new Thread[4];
 
-    try {
-      a.join();
-      b.join();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    sortingThreads[0] = new Thread(() -> qsortHelper(v, 0, v.length / 4));
+    sortingThreads[1] = new Thread(() -> qsortHelper(v, v.length / 4 + 1, v.length / 2));
+    sortingThreads[2] = new Thread(() -> qsortHelper(v, v.length / 2 + 1, v.length / 4 * 3));
+    sortingThreads[3] = new Thread(() -> qsortHelper(v, v.length / 4 * 3 + 1, v.length - 1) );
+
+    Arrays.stream(sortingThreads).forEach(Thread::start);
+    Arrays.stream(sortingThreads).forEach(t -> {
+      try {
+        t.join();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    });
+
 
     //Combine the results
     Comparable[] u = new Comparable[v.length];
-    int i = 0;
-    int j = v.length / 2 + 1;
-    int ui = 0;
-    while(i <= v.length / 2 && j <= v.length - 1) {
-      if(v[i].compareTo(v[j]) < 0) {
-        u[ui++] = v[i++];
-      }else {
-        u[ui++] = v[j++];
+    int[] limits = new int[5];
+    int[] ind = new int[4];
+
+    limits[0] = -1;
+    limits[1] = v.length / 4;
+    limits[2] = v.length / 2;
+    limits[3] = v.length / 4 * 3;
+    limits[4] = v.length - 1;
+    IntStream.range(0, 4).parallel().forEach(i -> ind[i] = limits[i] + 1);
+
+    Optional<Comparable> opMin;
+    int minInd;
+
+    for(int i = 0; i < v.length; ++i) {
+      opMin = Optional.empty();
+      minInd = 0;
+
+      for(int j = 0; j < 4; ++j) {
+        if(ind[j] <= limits[j + 1]) {
+          if(!opMin.isPresent()){
+            opMin = Optional.of(v[ind[j]]);
+            minInd = j;
+          }else if(v[ind[j]].compareTo(opMin.get()) < 0) {
+            opMin = Optional.of(v[ind[j]]);
+            minInd = j;
+          }
+        }
       }
+
+      u[i] = opMin.get();
+      ind[minInd]++;
     }
 
-    while(i <= v.length / 2 ) {
-      u[ui++] = v[i++];
-    }
-
-    while (j <= v.length - 1) {
-      u[ui++] = v[j++];
-    }
-
-    for(i = 0; i < v.length; ++i) {
-      v[i] = u[i];
-    }
+    IntStream.range(0, v.length).parallel().forEach(i -> v[i] = u[i]);
   }
 
   private static void qsortHelper(Comparable[] v, int l, int r) {
-    if(l >= r) {
-      return ;
+    if(l >= r - 15) {
+      InsertSort.sort(v, l, r);
+      return;
     }
 
     int partIndex = partition(v, l, r);
