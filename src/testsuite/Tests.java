@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.Test;
+import sortings.MergeSort;
 import sortings.QuickSort;
 
 public class Tests {
@@ -47,4 +48,19 @@ public class Tests {
 
     assertTrue(Arrays.equals(a, b));
    }
+
+  @Test
+  public void mergeSortTest1() {
+
+    Integer[] a = integerRandomGenerator(10000000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    Integer[] b = a.clone();
+    Arrays.sort(b);
+
+
+    long time = System.currentTimeMillis();
+    MergeSort.mergeSort(a);
+    System.out.println("MergeSortTest1 executed in: " + (System.currentTimeMillis() - time));
+
+    assertTrue(Arrays.equals(a, b));
+  }
 }
