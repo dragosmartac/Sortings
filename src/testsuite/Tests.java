@@ -2,6 +2,7 @@ package testsuite;
 
 import static junit.framework.TestCase.assertTrue;
 
+import dataStructures.SkipList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
@@ -63,4 +64,23 @@ public class Tests {
 
     assertTrue(Arrays.equals(a, b));
   }
+
+  @Test
+  public void skipListTest1() {
+    Integer[] a = integerRandomGenerator(10000000, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    Integer[] b = a.clone();
+    Arrays.sort(b);
+
+
+    long time = System.currentTimeMillis();
+    SkipList<Integer> skipList = new SkipList<>(25);
+    for(int i = 0 ; i < a.length ; ++i) {
+      skipList.add(a[i], a[i]);
+    }
+    //Arrays.stream(a).forEach(i -> skipList.add(i, i));
+    System.out.println("MergeSortTest1 executed in: " + (System.currentTimeMillis() - time));
+
+    assertTrue(Arrays.equals(skipList.toList().toArray(), b));
+  }
+
 }
