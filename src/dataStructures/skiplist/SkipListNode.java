@@ -1,15 +1,15 @@
-package dataStructures;
+package dataStructures.skiplist;
 
-public class Node<T> {
+public class SkipListNode<T> {
   private int key;
   private int level;
   private T data;
-  private Node<T> next;
-  private Node<T> down;
+  private SkipListNode<T> next;
+  private SkipListNode<T> down;
   private int order;
 
 
-  public Node(int key, T data, Node<T> next, Node<T> down, int level) {
+  public SkipListNode(int key, T data, SkipListNode<T> next, SkipListNode<T> down, int level) {
     this.key = key;
     this.data = data;
     this.next = next;
@@ -18,11 +18,11 @@ public class Node<T> {
     order = 1;
   }
 
-  public void setNext(Node<T> next) {
+  public void setNext(SkipListNode<T> next) {
     this.next = next;
   }
 
-  public void setDown(Node<T> down) {
+  public void setDown(SkipListNode<T> down) {
     this.down = down;
   }
 
@@ -30,7 +30,7 @@ public class Node<T> {
     this.data = data;
   }
 
-  public Node<T> getNext() {
+  public SkipListNode<T> getNext() {
     return next;
   }
 
@@ -46,7 +46,7 @@ public class Node<T> {
     return level;
   }
 
-  public Node<T> getDown() {
+  public SkipListNode<T> getDown() {
     return down;
   }
 

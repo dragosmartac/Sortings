@@ -1,4 +1,4 @@
-package dataStructures;
+package dataStructures.skiplist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Random;
 
 public class SkipList<T> {
-  private Node<T> head;
+  private SkipListNode<T> head;
   private int maxLevel;
   private int listSize;
   private Random generator;
@@ -49,7 +49,7 @@ public class SkipList<T> {
 
   public SkipList(int maxLevel) {
     this.maxLevel = maxLevel;
-    head = new Node<>(Integer.MIN_VALUE, null, null, null, 0);
+    head = new SkipListNode<>(Integer.MIN_VALUE, null, null, null, 0);
 
     listSize = 0;
     generator = new Random();
@@ -64,11 +64,11 @@ public class SkipList<T> {
 
     int newNodeLvl = getLevel();
     if(head.getLevel() < newNodeLvl) {
-      head = new Node<>(Integer.MIN_VALUE, null, null, head, newNodeLvl);
+      head = new SkipListNode<>(Integer.MIN_VALUE, null, null, head, newNodeLvl);
     }
 
-    Node<T> curr = head;
-    Node<T> last = null;
+    SkipListNode<T> curr = head;
+    SkipListNode<T> last = null;
 
     while(curr != null) {
 
@@ -77,7 +77,7 @@ public class SkipList<T> {
 
         if(curr.getLevel() <= newNodeLvl) {
           //Add the new node to this lane
-          Node<T> newNode = new Node<>(key, data, curr.getNext(), null, curr.getLevel());
+          SkipListNode<T> newNode = new SkipListNode<>(key, data, curr.getNext(), null, curr.getLevel());
           curr.setNext(newNode);
 
           if (last != null) {
@@ -108,7 +108,7 @@ public class SkipList<T> {
   }
 
   private void increaseOrderOfElement(int key) {
-    Node<T> curr = head;
+    SkipListNode<T> curr = head;
 
     while(curr != null) {
 
@@ -127,7 +127,7 @@ public class SkipList<T> {
   }
 
   public void update(T data, int key) {
-    Node<T> curr = head;
+    SkipListNode<T> curr = head;
 
     while(curr != null) {
 
@@ -147,7 +147,7 @@ public class SkipList<T> {
 
   //Delete the entire node regardless of the order
   public void delete(int key) {
-    Node<T> curr = head;
+    SkipListNode<T> curr = head;
 
     while(curr != null) {
 
@@ -168,7 +168,7 @@ public class SkipList<T> {
 
   //Decrese the order by one, if order is 0 remove node
   public void deleteOne(int key) {
-    Node<T> curr = head;
+    SkipListNode<T> curr = head;
 
     while(curr != null) {
 
@@ -192,7 +192,7 @@ public class SkipList<T> {
   }
 
   public boolean contains(int key) {
-    Node<T> curr = head;
+    SkipListNode<T> curr = head;
 
     while(curr != null) {
       if(curr.getNext() == null || curr.getNext().getKey() >= key) {
@@ -210,8 +210,8 @@ public class SkipList<T> {
     return false;
   }
 
-  public Optional<Node<T>> getNode(int key){
-    Node<T> curr = head;
+  private Optional<SkipListNode<T>> getNode(int key){
+    SkipListNode<T> curr = head;
 
     while(curr != null) {
       if(curr.getNext() == null || curr.getNext().getKey() >= key) {
@@ -229,10 +229,27 @@ public class SkipList<T> {
     return Optional.empty();
   }
 
+  public boolean isEmpty() {
+    return listSize == 0;
+  }
+
+  public int getSize() {
+    return listSize;
+  }
+
+  private int getLevel() {
+    int lvl = 0;
+    while(generator.nextBoolean() && lvl < maxLevel) {
+      ++lvl;
+    }
+
+    return lvl;
+  }
+
   @Override
   public String toString() {
     //Get lowest head
-    Node<T> curr = head;
+    SkipListNode<T> curr = head;
     while (curr.getDown() != null) {
       curr = curr.getDown();
     }
@@ -260,7 +277,7 @@ public class SkipList<T> {
   public List<T> toList() {
 
     List<T> list = new ArrayList<>();
-    Node<T> curr = head;
+    SkipListNode<T> curr = head;
 
     while (curr.getDown() != null) {
       curr = curr.getDown();
@@ -274,22 +291,5 @@ public class SkipList<T> {
     }
 
     return list;
-  }
-
-  public boolean isEmpty() {
-    return listSize == 0;
-  }
-
-  public int getSize() {
-    return listSize;
-  }
-
-  private int getLevel() {
-    int lvl = 0;
-    while(generator.nextBoolean() && lvl < maxLevel) {
-      ++lvl;
-    }
-
-    return lvl;
   }
 }

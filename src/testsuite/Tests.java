@@ -2,12 +2,9 @@ package testsuite;
 
 import static junit.framework.TestCase.assertTrue;
 
-import dataStructures.SkipList;
+import dataStructures.skiplist.SkipList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.junit.Test;
 import sortings.MergeSort;
 import sortings.QuickSort;
