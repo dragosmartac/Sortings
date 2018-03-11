@@ -2,6 +2,8 @@ package testsuite;
 
 import static junit.framework.TestCase.assertTrue;
 
+import dataStructures.avl.AVL;
+import dataStructures.bst.BST;
 import dataStructures.skiplist.SkipList;
 import java.util.Arrays;
 import java.util.Random;
@@ -78,6 +80,34 @@ public class Tests {
     System.out.println("MergeSortTest1 executed in: " + (System.currentTimeMillis() - time));
 
     assertTrue(Arrays.equals(skipList.toList().toArray(), b));
+  }
+
+  @Test
+  public void bsts1() {
+    AVL<Integer> avl = new AVL<>();
+    BST<Integer> bst = new BST<>();
+    Integer[] a = new Integer[10000];
+
+    for(int i = 0; i < 10000; ++i) {
+      a[i] = i;
+    }
+
+    long time = System.currentTimeMillis();
+    for(int i = 0; i < 10000; ++i) {
+      avl.add(i);
+    }
+
+    System.out.println("AVL test executed in: " + (System.currentTimeMillis() - time));
+    //assertTrue(Arrays.equals(avl.traverseInorder().toArray(), a));
+
+    time = System.currentTimeMillis();
+    for(int i = 0; i < 10000; ++i) {
+      bst.add(i);
+    }
+
+    System.out.println("BST test executed in: " + (System.currentTimeMillis() - time));
+    //assertTrue(Arrays.equals(avl.traverseInorder().toArray(), a));
+
   }
 
 }
